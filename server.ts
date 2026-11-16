@@ -1826,6 +1826,11 @@ async function startServer() {
     }
   });
 
+  // Return structured JSON 404 for unknown /api/* routes instead of HTML fallback
+  app.use('/api', (_req, res) => {
+    res.status(404).json({ error: 'NOT_FOUND', message: 'API endpoint not found' });
+  });
+
   // Vite Dev Middleware or Static Production Build
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
@@ -1841,10 +1846,15 @@ async function startServer() {
           next();
           return;
         }
-        const patchedCode = result.code.replace(
-          'transport.connect(createHMRHandler(handleMessage));',
-          '/* HMR disabled in Express middlewareMode */'
-        );
+        const patchedCode = result.code
+          .replace(
+            'transport.connect(createHMRHandler(handleMessage));',
+            '/* HMR disabled in Express middlewareMode */'
+          )
+          .replace(
+            'else throw new SendBeforeConnectError("send was called before connect");',
+            'else return;'
+          );
         res
           .status(200)
           .setHeader('Content-Type', 'application/javascript; charset=utf-8')
