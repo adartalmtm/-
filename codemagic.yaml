@@ -1,0 +1,58 @@
+workflows:
+  android-capacitor-release:
+    name: AL EQFAL Android APK & AAB
+    max_build_duration: 60
+    environment:
+      java: 21
+      node: 22
+    scripts:
+      - name: Install npm dependencies and build web bundle
+        script: |
+          npm ci
+          npm run build
+          npx cap sync android
+      - name: Build Android Debug APK
+        script: |
+          cd android
+          ./gradlew assembleDebug
+      - name: Build Signed Release AAB (when Codemagic keystore is configured)
+        script: |
+          cd android
+          if [ -n "${CM_KEYSTORE_PATH:-}" ]; then
+            ./gradlew bundleRelease assembleRelease \
+              -Pandroid.injected.signing.store.file="$CM_KEYSTORE_PATH" \
+              -Pandroid.injected.signing.store.password="$CM_KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias="$CM_KEY_ALIAS" \
+              -Pandroid.injected.signing.key.password="$CM_KEY_PASSWORD"
+          else
+            echo "CM_KEYSTORE_PATH not set; skipping signed release AAB."
+          fi
+    artifacts:
+      - android/app/build/outputs/**/*.apk
+      - android/app/build/outputs/**/*.aab
+
+  ios-capacitor-release:
+    name: AL EQFAL iOS IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.aleqfal.app
+      xcode: latest
+      node: 22
+    scripts:
+      - name: Install npm dependencies and sync Capacitor iOS
+        script: |
+          npm ci
+          npm run build
+          npx cap sync ios
+      - name: Apply Codemagic code signing & build IPA
+        script: |
+          xcode-project use-profiles
+          xcode-project build-ipa \
+            --project "ios/App/App.xcodeproj" \
+            --scheme "App"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log

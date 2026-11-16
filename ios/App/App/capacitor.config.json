@@ -1,0 +1,33 @@
+{
+	"appId": "com.aleqfal.app",
+	"appName": "AL EQFAL",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https",
+		"iosScheme": "capacitor"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 1500,
+			"launchAutoHide": true,
+			"backgroundColor": "#F8FAFC",
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": false,
+			"splashFullScreen": false,
+			"splashImmersive": false
+		},
+		"StatusBar": {
+			"style": "DARK",
+			"backgroundColor": "#FFFFFF",
+			"overlaysWebView": false
+		}
+	},
+	"packageClassList": [
+		"CAPCameraPlugin",
+		"FilesystemPlugin",
+		"CAPNetworkPlugin",
+		"SharePlugin",
+		"SplashScreenPlugin",
+		"StatusBarPlugin"
+	]
+}

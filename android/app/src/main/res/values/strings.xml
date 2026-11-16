@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AL EQFAL</string>
+    <string name="title_activity_main">AL EQFAL</string>
+    <string name="package_name">com.aleqfal.app</string>
+    <string name="custom_url_scheme">com.aleqfal.app</string>
+</resources>

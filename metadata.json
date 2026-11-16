@@ -1,0 +1,6 @@
+{
+  "name": "AL EQFAL - Suppliers Management",
+  "description": "Simple and professional suppliers and purchase invoices management system for AL EQFAL with Google Drive storage, bilingual Arabic RTL and English LTR support, and Excel/PDF exports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
